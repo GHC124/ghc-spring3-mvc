@@ -148,7 +148,7 @@ public class ContactController extends AbsController {
 		}
 		Page<Contact> contactPage = contactService.findAllByPage(pageRequest);
 		ContactGrid contactGrid = new ContactGrid();
-		contactGrid.setCurrentPages(contactPage.getNumber() + 1);
+		contactGrid.setCurrentPage(contactPage.getNumber() + 1);
 		contactGrid.setTotalPages(contactPage.getTotalPages());
 		contactGrid.setTotalRecords(contactPage.getTotalElements());
 		contactGrid.setContactData(contactPage.getContent());

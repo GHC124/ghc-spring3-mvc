@@ -6,7 +6,7 @@ import com.ghc.domain.Contact;
 
 public class ContactGrid {
 	private int mTotalPages;
-	private int mCurrentPages;
+	private int mCurrentPage;
 	private long mTotalRecords;
 	private List<Contact> mContactData;
 	
@@ -16,11 +16,11 @@ public class ContactGrid {
 	public void setTotalPages(int totalPages) {
 		mTotalPages = totalPages;
 	}
-	public int getCurrentPages() {
-		return mCurrentPages;
+	public int getCurrentPage() {
+		return mCurrentPage;
 	}
-	public void setCurrentPages(int currentPages) {
-		mCurrentPages = currentPages;
+	public void setCurrentPage(int currentPage) {
+		mCurrentPage = currentPage;
 	}
 	public long getTotalRecords() {
 		return mTotalRecords;

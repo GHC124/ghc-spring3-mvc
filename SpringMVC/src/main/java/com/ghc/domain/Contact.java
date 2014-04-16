@@ -5,6 +5,8 @@
  */
 package com.ghc.domain;
 
+import static com.ghc.web.Constants.DATE_FORMAT_PATTERN;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -113,7 +115,7 @@ public class Contact {
 		String birthDateString = "";
 		if (mBirthDate != null)
 			birthDateString = org.joda.time.format.DateTimeFormat.forPattern(
-					"yyyy-MM-dd").print(mBirthDate);
+					DATE_FORMAT_PATTERN).print(mBirthDate);
 		return birthDateString;
 	}
 
