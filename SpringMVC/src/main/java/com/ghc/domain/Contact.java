@@ -15,8 +15,10 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
 
 /**
@@ -54,6 +56,8 @@ public class Contact {
 		mVersion = version;
 	}
 
+	@NotEmpty(message="{validation.firstname.NotEmpty.message}")
+	@Size(min=3, max=60, message="{validation.firstname.Size.message}")
 	@Column(name = "first_name")
 	public String getFirstName() {
 		return mFirstName;
@@ -63,6 +67,8 @@ public class Contact {
 		mFirstName = firstName;
 	}
 
+	@NotEmpty(message="{validation.lastname.NotEmpty.message}") 
+	@Size(min=1, max=40, message="{validation.lastname.Size.message}") 
 	@Column(name = "last_name")
 	public String getLastName() {
 		return mLastName;
