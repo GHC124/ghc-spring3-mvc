@@ -18,8 +18,6 @@ import javax.persistence.Version;
 
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 /**
  * 
@@ -74,9 +72,8 @@ public class Contact {
 		mLastName = lastName;
 	}
 
-	@Type(type = "org.joda.time.contrib.hibernate.PersistentDateTime")
+	@Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
 	@Column(name = "birth_date")
-	@DateTimeFormat(iso = ISO.DATE)
 	public DateTime getBirthDate() {
 		return mBirthDate;
 	}
