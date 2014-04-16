@@ -25,7 +25,7 @@
         colModel :[  
           {name:'firstName', index:'firstName', width:150}, 
           {name:'lastName', index:'lastName', width:100},  
-          {name:'birthDateString', index:'birthDate', width:100} 
+          {name:'birthDate', index:'birthDate', width:100} 
         ], 
         jsonReader : { 
             root:"contactData", 

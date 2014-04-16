@@ -120,7 +120,7 @@ public class ContactController extends AbsController {
 		return "contacts/create";
 	}
 
-	@RequestMapping(value = "/listGrid", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/listgrid", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public ContactGrid listGrid(
 			@RequestParam(value = "page", required = false) Integer page,
@@ -151,6 +151,7 @@ public class ContactController extends AbsController {
 		contactGrid.setCurrentPages(contactPage.getNumber() + 1);
 		contactGrid.setTotalPages(contactPage.getTotalPages());
 		contactGrid.setTotalRecords(contactPage.getTotalElements());
+		contactGrid.setContactData(contactPage.getContent());
 
 		return contactGrid;
 	}
