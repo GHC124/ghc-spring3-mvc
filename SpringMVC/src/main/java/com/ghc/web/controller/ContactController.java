@@ -5,29 +5,30 @@
  */
 package com.ghc.web.controller;
 
-import java.beans.PropertyEditorSupport;
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ghc.domain.Contact;
 import com.ghc.service.jpa.ContactService;
 import com.ghc.util.Log;
+import com.ghc.web.form.ContactGrid;
 import com.ghc.web.form.Message;
 import com.ghc.web.util.UrlUtil;
 
@@ -36,40 +37,9 @@ import com.ghc.web.util.UrlUtil;
  */
 @RequestMapping("/contacts")
 @Controller
-public class ContactController {
+public class ContactController extends AbsController {
 	@Autowired
 	private ContactService contactService;
-	@Autowired
-	private MessageSource messageSource;
-
-	private Locale mLocale = Locale.US;
-	
-	@InitBinder
-	protected void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(DateTime.class, new DateTimeEditor());
-	}
-
-	public class DateTimeEditor extends PropertyEditorSupport {
-
-		@Override
-		public void setAsText(String text) throws IllegalArgumentException {
-			String datePattern = messageSource.getMessage("date_format_pattern", new Object[] {}, mLocale);
-			DateTime dateTime = org.joda.time.format.DateTimeFormat.forPattern(
-					datePattern).parseDateTime(text);
-			setValue(dateTime);
-		}
-
-		@Override
-		public String getAsText() throws IllegalArgumentException {
-			String datePattern = messageSource.getMessage("date_format_pattern", new Object[] {}, mLocale);
-			String s = "";
-			if (getValue() != null) {
-				s = org.joda.time.format.DateTimeFormat
-						.forPattern(datePattern).print((DateTime) getValue());
-			}
-			return s;
-		}
-	}
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
@@ -94,7 +64,6 @@ public class ContactController {
 	public String update(@Valid Contact contact, BindingResult bindingResult,
 			Model model, HttpServletRequest httpServletRequest,
 			RedirectAttributes redirectAttributes, Locale locale) {
-		mLocale = locale;
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(
 					"message",
@@ -125,7 +94,6 @@ public class ContactController {
 	public String create(@Valid Contact contact, BindingResult bindingResult,
 			Model uiModel, HttpServletRequest httpServletRequest,
 			RedirectAttributes redirectAttributes, Locale locale) {
-		mLocale = locale;
 		if (bindingResult.hasErrors()) {
 			uiModel.addAttribute(
 					"message",
@@ -150,5 +118,40 @@ public class ContactController {
 		Contact contact = new Contact();
 		uiModel.addAttribute("contact", contact);
 		return "contacts/create";
+	}
+
+	@RequestMapping(value = "/listGrid", method = RequestMethod.GET, produces = "application/json")
+	@ResponseBody
+	public ContactGrid listGrid(
+			@RequestParam(value = "page", required = false) Integer page,
+			@RequestParam(value = "rows", required = false) Integer rows,
+			@RequestParam(value = "sidx", required = false) String sortBy,
+			@RequestParam(value = "sord", required = false) String order) {
+		Sort sort = null;
+		String orderBy = sortBy;
+
+		if (orderBy != null && orderBy.equals("birthDateString")) {
+			orderBy = "birthDate";
+		}
+		if (orderBy != null && order != null) {
+			if (order.equals("desc")) {
+				sort = new Sort(Sort.Direction.DESC, orderBy);
+			} else {
+				sort = new Sort(Sort.Direction.ASC, orderBy);
+			}
+		}
+		PageRequest pageRequest = null;
+		if (sort != null) {
+			pageRequest = new PageRequest(page - 1, rows, sort);
+		} else {
+			pageRequest = new PageRequest(page - 1, rows);
+		}
+		Page<Contact> contactPage = contactService.findAllByPage(pageRequest);
+		ContactGrid contactGrid = new ContactGrid();
+		contactGrid.setCurrentPages(contactPage.getNumber() + 1);
+		contactGrid.setTotalPages(contactPage.getTotalPages());
+		contactGrid.setTotalRecords(contactPage.getTotalElements());
+
+		return contactGrid;
 	}
 }

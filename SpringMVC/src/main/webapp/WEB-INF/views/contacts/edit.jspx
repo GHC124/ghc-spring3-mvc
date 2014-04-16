@@ -28,8 +28,12 @@
 			$('#birthDate').datepicker({ 
 				changeYear: true,
 				dateFormat:'${dateFormatPatternPicker}'
-			}); 
-		}); 
+			});
+			$("#contactDescription").ckeditor({ 
+	            toolbar : 'Basic', 
+	            uiColor : '#CCCCCC' 
+	        });
+		});		
 	</script> 
 	<div id="contactUpdate">
 		<form:form modelAttribute="contact" id="contactUpdateForm"
