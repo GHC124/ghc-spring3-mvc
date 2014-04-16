@@ -21,12 +21,13 @@
 	<spring:eval
 		expression="contact.id == null ? labelContactNew:labelContactUpdate"
 		var="formTitle" />
+	<spring:message code="date_format_pattern_picker" var="dateFormatPatternPicker" />
 	<h1>${formTitle}</h1>
 	<script type="text/javascript"> 
 		$(function(){ 
 			$('#birthDate').datepicker({ 
-				dateFormat: 'yy-mm-dd', 
-				changeYear: true 
+				changeYear: true,
+				dateFormat:'${dateFormatPatternPicker}'
 			}); 
 		}); 
 	</script> 

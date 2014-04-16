@@ -42,6 +42,8 @@ public class ContactController {
 	@Autowired
 	private MessageSource messageSource;
 
+	private Locale mLocale = Locale.US;
+	
 	@InitBinder
 	protected void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(DateTime.class, new DateTimeEditor());
@@ -51,18 +53,19 @@ public class ContactController {
 
 		@Override
 		public void setAsText(String text) throws IllegalArgumentException {
-			String datePattern = messageSource.getMessage("", new Object[] {}, locale);
+			String datePattern = messageSource.getMessage("date_format_pattern", new Object[] {}, mLocale);
 			DateTime dateTime = org.joda.time.format.DateTimeFormat.forPattern(
-					"yyyy-MM-dd").parseDateTime(text);
+					datePattern).parseDateTime(text);
 			setValue(dateTime);
 		}
 
 		@Override
 		public String getAsText() throws IllegalArgumentException {
+			String datePattern = messageSource.getMessage("date_format_pattern", new Object[] {}, mLocale);
 			String s = "";
 			if (getValue() != null) {
 				s = org.joda.time.format.DateTimeFormat
-						.forPattern("yyyy-MM-dd").print((DateTime) getValue());
+						.forPattern(datePattern).print((DateTime) getValue());
 			}
 			return s;
 		}
@@ -91,6 +94,7 @@ public class ContactController {
 	public String update(@Valid Contact contact, BindingResult bindingResult,
 			Model model, HttpServletRequest httpServletRequest,
 			RedirectAttributes redirectAttributes, Locale locale) {
+		mLocale = locale;
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(
 					"message",
@@ -121,6 +125,7 @@ public class ContactController {
 	public String create(@Valid Contact contact, BindingResult bindingResult,
 			Model uiModel, HttpServletRequest httpServletRequest,
 			RedirectAttributes redirectAttributes, Locale locale) {
+		mLocale = locale;
 		if (bindingResult.hasErrors()) {
 			uiModel.addAttribute(
 					"message",
