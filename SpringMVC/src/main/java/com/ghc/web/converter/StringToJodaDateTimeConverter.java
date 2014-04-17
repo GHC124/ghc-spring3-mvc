@@ -36,6 +36,7 @@ public class StringToJodaDateTimeConverter implements
 		dateFormat = DateTimeFormat.forPattern(datePattern);
 	}
 
+	@Override
 	public DateTime convert(String dateString) {
 		return dateFormat.parseDateTime(dateString);
 	}

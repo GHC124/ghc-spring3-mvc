@@ -414,3 +414,16 @@ fieldset th {
 	height: 11px;
 	width: 16px;
 }
+
+.table_no_cell{
+	background: #FFFFFF;
+	margin: 2px 0 0 0;
+	border: 0px;
+	border-collapse: collapse;
+	width: 100%;
+}
+.table_no_cell td, .table_no_cell tr {
+	padding: 2px;
+	border: 0px;
+	background: #FFFFFF;
+}

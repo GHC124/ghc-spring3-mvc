@@ -31,7 +31,9 @@
 			});
 			$("#contactDescription").ckeditor({ 
 	            toolbar : 'Basic', 
-	            uiColor : '#CCCCCC' 
+	            uiColor : '#CCCCCC',
+	            height: 300,
+	            width: 400
 	        });
 		});		
 	</script> 
@@ -41,38 +43,47 @@
 			<c:if test="${not empty message}">
 				<div id="message" class="${message.type}">${message.message}</div>
 			</c:if>
-			<form:label path="firstName"> 
+			<table class="table_no_cell">
+				<tr>
+					<td><form:label path="firstName"> 
 				${labelContactFirstName}* 
-			</form:label>
-			<form:input path="firstName" />
-			<div>
-				<form:errors path="firstName" cssClass="error" />
-			</div>
-			<p />
-			<form:label path="lastName"> 
+			</form:label></td>
+					<td><form:input path="firstName" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><form:errors path="firstName" cssClass="error" />
+					</td>
+				</tr>
+				<tr>
+					<td><form:label path="lastName"> 
 				${labelContactLastName}* 
-			</form:label>
-			<form:input path="lastName" />
-			<div>
-				<form:errors path="lastName" cssClass="error" />
-			</div>
-			<p />
-			<form:label path="birthDate"> 
+					</form:label></td>
+					<td><form:input path="lastName" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><form:errors path="lastName" cssClass="error" /></td>
+				</tr>
+				<tr>
+					<td><form:label path="birthDate"> 
 				${labelContactBirthDate} 
-			</form:label>
-			<form:input path="birthDate" id="birthDate" />
-			<div>
-				<form:errors path="birthDate" cssClass="error" />
-			</div>
-			<p />
-			<form:label path="description"> 
+			</form:label></td>
+					<td><form:input path="birthDate" id="birthDate" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><form:errors path="birthDate" cssClass="error" /></td>
+				</tr>
+				<tr>
+					<td><form:label path="description"> 
 				${labelContactDescription} 
-			</form:label>
-			<form:textarea cols="60" rows="8" path="description"
-				id="contactDescription" />
-			<div>
-				<form:errors path="description" cssClass="error" />
-			</div>
+			</form:label></td>
+					<td><form:textarea cols="60" rows="8" path="description"
+							id="contactDescription" /></td>
+				</tr>
+				<tr>
+					<td colspan="2"><form:errors path="description"
+							cssClass="error" /></td>
+				</tr>
+			</table>
 			<p />
 			<form:hidden path="version" />
 			<button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
