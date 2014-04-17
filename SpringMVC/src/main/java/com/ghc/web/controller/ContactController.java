@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +28,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ghc.domain.Contact;
 import com.ghc.service.jpa.ContactService;
-import com.ghc.util.Log;
 import com.ghc.web.form.ContactGrid;
 import com.ghc.web.form.Message;
 import com.ghc.web.util.UrlUtil;
@@ -43,13 +43,8 @@ public class ContactController extends AbsController {
 
 	@RequestMapping(method = RequestMethod.GET)
 	public String list(Model model) {
-		Log.debug("Listing Contacts");
-
 		List<Contact> contacts = contactService.findAll();
 		model.addAttribute("contacts", contacts);
-
-		Log.debug("Get %s contact(s)", contacts.size());
-
 		return "contacts/list";
 	}
 
@@ -83,6 +78,7 @@ public class ContactController extends AbsController {
 						httpServletRequest);
 	}
 
+	@PreAuthorize("isAuthenticated()") 
 	@RequestMapping(value = "/{id}", params = "form", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
 		Contact contact = contactService.findById(id);
@@ -113,6 +109,7 @@ public class ContactController extends AbsController {
 						httpServletRequest);
 	}
 
+	@PreAuthorize("isAuthenticated()") 
 	@RequestMapping(params = "form", method = RequestMethod.GET)
 	public String createForm(Model uiModel) {
 		Contact contact = new Contact();
