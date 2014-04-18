@@ -21,7 +21,7 @@
 	<spring:message code="label_contact_nophoto" var="labelContactNoPhoto"/>
 	<spring:message code="label_contact_update_photo" var="labelContactUpdatePhoto"/>
 	<spring:url value="/contacts/photo" var="contactPhotoUrl"/>
-	<spring:url value="/contacts/photoUpdate" var="contactPhotoUpdateUrl"/>
+	<spring:url value="/contacts/updatePhoto" var="contactPhotoUpdateUrl"/>
 	<spring:eval
 		expression="contact.id == null ? labelContactNew:labelContactUpdate"
 		var="formTitle" />
@@ -79,7 +79,7 @@
 				</tr>
 				<tr>
 					<td><form:label path="description"> 
-				${labelContactDescription} </form:label></td>
+						${labelContactDescription} </form:label></td>
 					<td><form:textarea cols="60" rows="8" path="description"
 							id="contactDescription" /></td>
 				</tr>
@@ -87,12 +87,22 @@
 					<td colspan="2"><form:errors path="description"
 							cssClass="error" /></td>
 				</tr>
-				<tr> 
-					<td>${labelContactPhoto}</td> 
-					<td><img src="${contactPhotoUrl}/${contact.id}" width="350px" height="400px" alt="${labelContactNoPhoto}"></img>
-						<a href="${contactPhotoUpdateUrl}">${labelContactUpdatePhoto}</a>
-					</td> 
-				</tr>				
+				<c:choose>
+					<c:when test="${contact.id == null}">
+						<tr>
+							<td><label for="file">${labelContactPhoto}</label></td>
+							<td><input name="file" type="file"/></td>
+						</tr>				
+					</c:when>
+					<c:otherwise>
+						<tr> 
+							<td>${labelContactPhoto}</td> 
+							<td><img src="${contactPhotoUrl}/${contact.id}" width="350px" height="400px" alt="${labelContactNoPhoto}"></img>
+								<a href="${contactPhotoUpdateUrl}/${contact.id}" style="vertical-align:top;">${labelContactUpdatePhoto}</a>
+							</td> 
+						</tr>		
+					</c:otherwise>
+				</c:choose>
 			</table>
 			<p />
 			<form:hidden path="version" />

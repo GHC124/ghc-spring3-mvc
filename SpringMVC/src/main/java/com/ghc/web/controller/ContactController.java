@@ -5,6 +5,8 @@
  */
 package com.ghc.web.controller;
 
+import static com.ghc.web.Constants.PHOTO_TYPE;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -32,8 +34,10 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ghc.domain.Contact;
 import com.ghc.service.jpa.ContactService;
+import com.ghc.util.Log;
 import com.ghc.web.form.ContactGrid;
 import com.ghc.web.form.Message;
+import com.ghc.web.util.PhotoUtil;
 import com.ghc.web.util.UrlUtil;
 
 /**
@@ -62,8 +66,7 @@ public class ContactController extends AbsController {
 	@RequestMapping(value = "/{id}", params = "form", method = RequestMethod.POST)
 	public String update(@Valid Contact contact, BindingResult bindingResult,
 			Model model, HttpServletRequest httpServletRequest,
-			RedirectAttributes redirectAttributes, Locale locale,
-			@RequestParam(value = "file", required = false) Part file) {
+			RedirectAttributes redirectAttributes, Locale locale) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(
 					"message",
@@ -83,7 +86,7 @@ public class ContactController extends AbsController {
 						httpServletRequest);
 	}
 
-	@PreAuthorize("isAuthenticated()") 
+	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(value = "/{id}", params = "form", method = RequestMethod.GET)
 	public String updateForm(@PathVariable("id") Long id, Model model) {
 		Contact contact = contactService.findById(id);
@@ -121,7 +124,7 @@ public class ContactController extends AbsController {
 				contact.setPhoto(fileContent);
 			} catch (IOException ex) {
 				Log.error("Error saving uploaded file");
-			}			
+			}
 		}
 
 		contactService.save(contact);
@@ -130,7 +133,7 @@ public class ContactController extends AbsController {
 						httpServletRequest);
 	}
 
-	@PreAuthorize("isAuthenticated()") 
+	@PreAuthorize("isAuthenticated()")
 	@RequestMapping(params = "form", method = RequestMethod.GET)
 	public String createForm(Model uiModel) {
 		Contact contact = new Contact();
@@ -183,5 +186,44 @@ public class ContactController extends AbsController {
 					contact.getId(), contact.getPhoto().length);
 		}
 		return contact.getPhoto();
+	}
+
+	@RequestMapping(value = "/updatePhoto/{id}", method = RequestMethod.GET)
+	public String updatePhoto() {
+		return "contacts/updatePhoto";
+	}
+
+	@RequestMapping(value = "/updatePhoto/{id}", method = RequestMethod.POST)
+	public String updatePhoto(@PathVariable("id") Long id, Model model,
+			HttpServletRequest httpServletRequest, Locale locale,
+			@RequestParam(value = "file", required = false) Part file) {
+		Contact contact = contactService.findById(id);
+		if (file != null) {
+			Log.debug("Photo type %s", file.getContentType());
+			if (!PhotoUtil.isValidType(file.getContentType())) {
+				model.addAttribute(
+						"message",
+						new Message("error", messageSource.getMessage(
+								"validation.InvalidType.message",
+								new Object[] { PHOTO_TYPE }, locale)));
+				return "contacts/updatePhoto";
+			}
+			byte[] fileContent = null;
+			try {
+				InputStream inputStream = file.getInputStream();
+				if (inputStream == null) {
+					Log.error("File inputstream is null");
+				}
+				fileContent = IOUtils.toByteArray(inputStream);
+				contact.setPhoto(fileContent);
+			} catch (IOException ex) {
+				Log.error("Error saving uploaded file");
+			}
+		}
+		contactService.save(contact);
+		
+		return "redirect:/contacts/"
+				+ UrlUtil.encodeUrlPathSegment(contact.getId().toString(),
+						httpServletRequest);
 	}
 }

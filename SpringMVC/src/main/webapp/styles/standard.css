@@ -80,11 +80,10 @@ body {
 }
 
 #menu {
-	background: #eee;
 	position:relative;
 	float:left;  	
 	left:0px;
-	width:220px;
+	width:30%;
 	margin-right:15px;
 }
 
@@ -426,4 +425,12 @@ fieldset th {
 	padding: 2px;
 	border: 0px;
 	background: #FFFFFF;
+}
+
+#login{
+	margin-top: 10px;
+}
+
+#login table{
+	width: 220px;		
 }

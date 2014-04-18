@@ -13,5 +13,8 @@
 	</definition>
 	<definition extends="default" name="contacts/create"> 
 		<put-attribute name="body" value="/WEB-INF/views/contacts/edit.jspx" /> 
-	</definition>  
+	</definition>
+	<definition extends="default" name="contacts/updatePhoto"> 
+		<put-attribute name="body" value="/WEB-INF/views/contacts/photo.jspx" /> 
+	</definition>    
 </tiles-definitions> 

@@ -6,11 +6,7 @@
 	<jsp:directive.page contentType="text/html;charset=UTF-8" />
 	<jsp:output omit-xml-declaration="yes" />
 	<spring:message code="label_contact_photo" var="labelContactPhoto" />
-	<spring:message code="label_action_save" var="labelActionSave" />
-	<spring:message code="label_action_reset" var="labelActionReset" />
-	<spring:message code="label_contact_nophoto" var="labelContactNoPhoto"/>
-	<spring:message code="label_contact_update_photo" var="labelContactUpdatePhoto"/>
-	<spring:url value="/contacts/photo" var="contactPhotoUrl"/>
+	<spring:message code="label_action_save" var="labelActionSave" />	
 	<div id="contactUpdate">
 		<form:form id="contactUpdateForm"
 			method="post" enctype="multipart/form-data">
@@ -18,17 +14,16 @@
 				<div id="message" class="${message.type}">${message.message}</div>
 			</c:if>
 			<table class="table_no_cell">
-				<td></td>
+				<tr>
+					<td><label for="file">${labelContactPhoto}</label></td>
+					<td><input name="file" type="file"/></td>
+				</tr>
 			</table>
 			<p />
 			<button type="submit"
 				class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
 				<span class="ui-button-text">${labelActionSave}</span>
-			</button>
-			<button type="reset"
-				class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
-				<span class="ui-button-text">${labelActionReset}</span>
-			</button>
+			</button>			
 		</form:form>
 	</div>
 </div>

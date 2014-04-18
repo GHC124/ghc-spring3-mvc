@@ -9,11 +9,14 @@
 	<spring:message code="label_login_password" var="labelLoginPassword"/>
 	<spring:message code="menu_header_text" var="menuHeaderText" />
 	<spring:message code="menu_add_contact" var="menuAddContact" />
+	<spring:message code="label_contact_list" var="menuContactList"/>
+	<spring:url value="/contacts" var="contactsUrl" />
 	<spring:url value="/contacts?form" var="addContactUrl" />
 	<spring:message code="label_login" var="labelLogin" />
 	<spring:url var="loginUrl" value="/j_spring_security_check" />
 
 	<h3>${menuHeaderText}</h3>
+		<a href="${contactsUrl}"><h3>${menuContactList}</h3></a>
 	<sec:authorize access="hasRole('ROLE_USER')">
 		<a href="${addContactUrl}"><h3>${menuAddContact}</h3></a>
 	</sec:authorize>
@@ -21,7 +24,7 @@
 		<div id="login">
 			<form name="loginForm" action="${loginUrl}" method="post">
 				<table>
-					<caption align="left">${labelLogin}:</caption>
+					<h3>${labelLogin}</h3>
 					<tr>
 						<td>${labelLoginUserName}:</td>
 						<td><input type="text" name="j_username" /></td>
