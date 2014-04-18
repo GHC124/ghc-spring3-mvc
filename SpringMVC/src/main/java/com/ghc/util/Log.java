@@ -32,4 +32,26 @@ public class Log {
 			sLog.debug(format);
 		}
 	}
+	
+	public static void error(String message) {
+		error(message, "");
+	}
+
+	public static void error(String message, Object... args) {
+		if (mEnableLog) {
+			String format = String.format(message, args);
+			sLog.error(format);
+		}
+	}
+	
+	public static void info(String message) {
+		info(message, "");
+	}
+
+	public static void info(String message, Object... args) {
+		if (mEnableLog) {
+			String format = String.format(message, args);
+			sLog.info(format);
+		}
+	}
 }

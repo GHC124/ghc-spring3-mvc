@@ -18,28 +18,33 @@
 	<spring:message code="label_contact_photo" var="labelContactPhoto" />
 	<spring:message code="label_action_save" var="labelActionSave" />
 	<spring:message code="label_action_reset" var="labelActionReset" />
+	<spring:message code="label_contact_nophoto" var="labelContactNoPhoto"/>
+	<spring:message code="label_contact_update_photo" var="labelContactUpdatePhoto"/>
+	<spring:url value="/contacts/photo" var="contactPhotoUrl"/>
+	<spring:url value="/contacts/photoUpdate" var="contactPhotoUpdateUrl"/>
 	<spring:eval
 		expression="contact.id == null ? labelContactNew:labelContactUpdate"
 		var="formTitle" />
-	<spring:message code="date_format_pattern_picker" var="dateFormatPatternPicker" />
+	<spring:message code="date_format_pattern_picker"
+		var="dateFormatPatternPicker" />
 	<h1>${formTitle}</h1>
-	<script type="text/javascript"> 
-		$(function(){ 
-			$('#birthDate').datepicker({ 
-				changeYear: true,
-				dateFormat:'${dateFormatPatternPicker}'
+	<script type="text/javascript">
+		$(function() {
+			$('#birthDate').datepicker({
+				changeYear : true,
+				dateFormat : '${dateFormatPatternPicker}'
 			});
-			$("#contactDescription").ckeditor({ 
-	            toolbar : 'Basic', 
-	            uiColor : '#CCCCCC',
-	            height: 300,
-	            width: 400
-	        });
-		});		
-	</script> 
+			$("#contactDescription").ckeditor({
+				toolbar : 'Basic',
+				uiColor : '#CCCCCC',
+				height : 300,
+				width : 400
+			});
+		});
+	</script>
 	<div id="contactUpdate">
 		<form:form modelAttribute="contact" id="contactUpdateForm"
-			method="post">
+			method="post" enctype="multipart/form-data">
 			<c:if test="${not empty message}">
 				<div id="message" class="${message.type}">${message.message}</div>
 			</c:if>
@@ -74,8 +79,7 @@
 				</tr>
 				<tr>
 					<td><form:label path="description"> 
-				${labelContactDescription} 
-			</form:label></td>
+				${labelContactDescription} </form:label></td>
 					<td><form:textarea cols="60" rows="8" path="description"
 							id="contactDescription" /></td>
 				</tr>
@@ -83,13 +87,21 @@
 					<td colspan="2"><form:errors path="description"
 							cssClass="error" /></td>
 				</tr>
+				<tr> 
+					<td>${labelContactPhoto}</td> 
+					<td><img src="${contactPhotoUrl}/${contact.id}" width="350px" height="400px" alt="${labelContactNoPhoto}"></img>
+						<a href="${contactPhotoUpdateUrl}">${labelContactUpdatePhoto}</a>
+					</td> 
+				</tr>				
 			</table>
 			<p />
 			<form:hidden path="version" />
-			<button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+			<button type="submit"
+				class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
 				<span class="ui-button-text">${labelActionSave}</span>
 			</button>
-			<button type="reset" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+			<button type="reset"
+				class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
 				<span class="ui-button-text">${labelActionReset}</span>
 			</button>
 		</form:form>
