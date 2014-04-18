@@ -5,12 +5,16 @@
  */
 package com.ghc.web.controller;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Part;
 import javax.validation.Valid;
 
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -58,7 +62,8 @@ public class ContactController extends AbsController {
 	@RequestMapping(value = "/{id}", params = "form", method = RequestMethod.POST)
 	public String update(@Valid Contact contact, BindingResult bindingResult,
 			Model model, HttpServletRequest httpServletRequest,
-			RedirectAttributes redirectAttributes, Locale locale) {
+			RedirectAttributes redirectAttributes, Locale locale,
+			@RequestParam(value = "file", required = false) Part file) {
 		if (bindingResult.hasErrors()) {
 			model.addAttribute(
 					"message",
@@ -89,7 +94,8 @@ public class ContactController extends AbsController {
 	@RequestMapping(params = "form", method = RequestMethod.POST)
 	public String create(@Valid Contact contact, BindingResult bindingResult,
 			Model uiModel, HttpServletRequest httpServletRequest,
-			RedirectAttributes redirectAttributes, Locale locale) {
+			RedirectAttributes redirectAttributes, Locale locale,
+			@RequestParam(value = "file", required = false) Part file) {
 		if (bindingResult.hasErrors()) {
 			uiModel.addAttribute(
 					"message",
@@ -103,6 +109,21 @@ public class ContactController extends AbsController {
 				"message",
 				new Message("success", messageSource.getMessage(
 						"contact_save_success", new Object[] {}, locale)));
+		// Process upload file
+		if (file != null) {
+			byte[] fileContent = null;
+			try {
+				InputStream inputStream = file.getInputStream();
+				if (inputStream == null) {
+					Log.error("File inputstream is null");
+				}
+				fileContent = IOUtils.toByteArray(inputStream);
+				contact.setPhoto(fileContent);
+			} catch (IOException ex) {
+				Log.error("Error saving uploaded file");
+			}			
+		}
+
 		contactService.save(contact);
 		return "redirect:/contacts/"
 				+ UrlUtil.encodeUrlPathSegment(contact.getId().toString(),
@@ -151,5 +172,16 @@ public class ContactController extends AbsController {
 		contactGrid.setContactData(contactPage.getContent());
 
 		return contactGrid;
+	}
+
+	@RequestMapping(value = "/photo/{id}", method = RequestMethod.GET)
+	@ResponseBody
+	public byte[] downloadPhoto(@PathVariable("id") Long id) {
+		Contact contact = contactService.findById(id);
+		if (contact.getPhoto() != null) {
+			Log.info("Downloading photo for id: {} with size: {}",
+					contact.getId(), contact.getPhoto().length);
+		}
+		return contact.getPhoto();
 	}
 }

@@ -62,6 +62,9 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
 			</param-value> 
 		</init-param> 
 		<load-on-startup>1</load-on-startup> 
+		<multipart-config> 
+			<max-file-size>5000000</max-file-size> 
+		</multipart-config> 
 	</servlet> 
 	<servlet-mapping> 
 		<servlet-name>appServlet</servlet-name> 
