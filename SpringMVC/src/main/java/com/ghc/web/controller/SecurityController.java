@@ -10,7 +10,7 @@ import com.ghc.web.form.Message;
 
 @RequestMapping("/security")
 @Controller
-public class SecurityController extends AbsController {
+public class SecurityController extends AbstractController {
 	
 	@RequestMapping("/loginfail")
 	public String loginFail(Model model, Locale locale){

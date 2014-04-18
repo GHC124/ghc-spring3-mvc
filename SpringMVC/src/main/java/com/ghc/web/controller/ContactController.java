@@ -45,7 +45,7 @@ import com.ghc.web.util.UrlUtil;
  */
 @RequestMapping("/contacts")
 @Controller
-public class ContactController extends AbsController {
+public class ContactController extends AbstractController {
 	@Autowired
 	private ContactService contactService;
 

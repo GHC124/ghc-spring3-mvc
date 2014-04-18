@@ -6,7 +6,7 @@
         http://www.springframework.org/schema/security  
         http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
-	<http use-expressions="true">
+	<http use-expressions="true" auto-config="true" access-denied-page="/accessDenied.html">
 		<intercept-url pattern='/*' access='permitAll' />
 		<form-login login-page="/contacts"
 			authentication-failure-url="/security/loginfail" default-target-url="/contacts" />

@@ -11,7 +11,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 
-public abstract class AbsController {
+public abstract class AbstractController {
 	@Autowired
 	protected MessageSource messageSource;
 
